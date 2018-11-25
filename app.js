@@ -7,18 +7,54 @@ Vue.component('tarea',{
     template:` <li :class="classes"> 
     <div class="view">
 
-    <input type="checkbox" class="toggle" v-model="tarea.complete">
-    <label  v-text="tarea.title" ></label>
+    <input type="checkbox" class="toggle" v-model="tarea.complete" />
+
+
+    <label  v-text="tarea.title" v-on:dblclick="edit()" ></label>
     <button class="destroy" @click="remove()" > </button >
     </div>
  
-
-
+    <input class="edit"  v-model="tarea.title"
+     @keyup.enter="finEditar()"  
+     @blur="finEditar()"
+    @keyup.esc="cancelarEdicion()"  
+      />
 
     </li>`,
-    methods:{
+    data: function(){
+        return{
+            editando:false,
+            guardarAntesEditar:''
+        }
 
-        remove:function(){
+    },
+    methods:{
+        //Editar tarea
+        edit:  function(){
+
+           this.guardarAntesEditar= this.tarea.title;
+           this.editando=true;
+
+        },
+
+        finEditar: function () 
+        {
+            
+            if(! this.tarea.title){ 
+
+                this.remove();
+
+            }
+
+            this.editando=false;
+
+        },
+        cancelarEdicion:function(){
+            this.editando=false;
+            this.tarea.title=this.guardarAntesEditar;
+        },
+
+        remove: function(){
             //tareas
       var tareas= this.$parent.tareas;
       tareas.splice(tareas.indexOf(this.tarea),1)
@@ -28,7 +64,7 @@ Vue.component('tarea',{
     },
     computed:{
         classes: function(){
-            return { completed: this.tarea.complete}
+            return { completed: this.tarea.complete,editing: this.editando} 
         }
    
     }
@@ -52,7 +88,7 @@ Vue.component('tareas',{
        
             </ul>
             </section>
-            <footer class="footer">
+            <footer class="footer" v-show="tareas.length">
             <span class="todo-count"> Completadas: {{ tareasCompletadas  }} </span>
             <span class="todo-count">  | Por hacer:  {{ tareasIncompletas }} </span>
             </footer>
