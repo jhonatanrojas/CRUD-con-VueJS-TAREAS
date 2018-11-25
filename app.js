@@ -20,8 +20,8 @@ Vue.component('tarea',{
 
         remove:function(){
             //tareas
-            console.log(   this.$parent.tareas)
-         
+      var tareas= this.$parent.tareas;
+      tareas.splice(tareas.indexOf(this.tarea),1)
 
         }
 
@@ -53,8 +53,8 @@ Vue.component('tareas',{
             </ul>
             </section>
             <footer class="footer">
-            <span class="todo-count"> Completadas {{ tareasCompletadas  }} </span>
-            <span class="todo-count">  | Incompletas  {{ tareasIncompletas }} </span>
+            <span class="todo-count"> Completadas: {{ tareasCompletadas  }} </span>
+            <span class="todo-count">  | Por hacer:  {{ tareasIncompletas }} </span>
             </footer>
             </section>`,
             data:function(){
